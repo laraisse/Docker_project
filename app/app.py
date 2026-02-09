@@ -51,10 +51,10 @@ class SimpleCNN(nn.Module):
 # Chargement du modèle
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = SimpleCNN(num_classes=10).to(DEVICE)
+MODEL_PATH = "/models/best_model.pth"
 
-# Charger les poids du modèle entraîné
 try:
-    checkpoint = torch.load('../models/best_model.pth', map_location=DEVICE)
+    checkpoint = torch.load(MODEL_PATH, map_location=DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     print(f"Model loaded successfully with accuracy: {checkpoint['accuracy']:.2f}%")

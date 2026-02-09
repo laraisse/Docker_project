@@ -193,13 +193,19 @@ def main():
         # Sauvegarde du meilleur modèle
         if test_acc > best_acc:
             best_acc = test_acc
-            os.makedirs('/models', exist_ok=True)
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'accuracy': test_acc,
-            }, '../models/best_model.pth')
+            MODEL_DIR = "/models"
+            os.makedirs(MODEL_DIR, exist_ok=True)
+
+            torch.save(
+                {
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'accuracy': test_acc,
+                },
+                os.path.join(MODEL_DIR, "best_model.pth")
+            )
+
             print(f"Model saved with accuracy: {test_acc:.2f}%")
 
     total_time = time.time() - start_time
