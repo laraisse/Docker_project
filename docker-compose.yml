@@ -8,14 +8,14 @@ services:
       dockerfile: train/Dockerfile
     container_name: cnn_training
     volumes:
-      - ./data:/data
-      - ./models:/models
+      - ./data:/app/data
+      - ./models:/app/models
     environment:
       - PYTHONUNBUFFERED=1
     networks:
       - ml_network
 
-  # Service API de prédiction
+  # Service API de prédiction avec interface graphique
   api:
     build:
       context: .
@@ -24,12 +24,17 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./models:/models
+      - ./models:/app/models           # Pour charger le modèle
+      - ./app/templates:/app/templates # Pour l'interface (live reload)
+      - ./data:/app/data               # Si besoin des données
     environment:
       - PYTHONUNBUFFERED=1
+      - FLASK_ENV=development
     networks:
       - ml_network
     restart: unless-stopped
+    depends_on:
+      - train
 
 networks:
   ml_network:

@@ -1,12 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import torch
 import torch.nn as nn
+from flask_cors import CORS
 from torchvision import transforms
 from PIL import Image
 import io
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+CORS(app)
 # Classes CIFAR-10
 CLASSES = ['airplane', 'automobile', 'bird', 'cat', 'deer',
            'dog', 'frog', 'horse', 'ship', 'truck']
@@ -69,18 +71,8 @@ transform = transforms.Compose([
 
 
 @app.route('/')
-def home():
-    return jsonify({
-        'message': 'CNN Image Classification API',
-        'model': 'SimpleCNN',
-        'dataset': 'CIFAR-10',
-        'classes': CLASSES,
-        'endpoints': {
-            '/predict': 'POST - Upload an image for prediction',
-            '/health': 'GET - Check API health'
-        }
-    })
-
+def index():
+    return render_template('index.html')
 
 @app.route('/health')
 def health():
@@ -119,7 +111,7 @@ def predict():
 
         # Top 3 prédictions
         top3_prob, top3_indices = torch.topk(probabilities, 3)
-        top3_predictions = [
+        top_3_predictions = [
             {
                 'class': CLASSES[idx.item()],
                 'confidence': prob.item()
@@ -129,9 +121,9 @@ def predict():
 
         return jsonify({
             'success': True,
-            'prediction': predicted_class,
+            'predicted_class': predicted_class,
             'confidence': confidence_score,
-            'top3_predictions': top3_predictions
+            'top_3_predictions': top_3_predictions
         })
 
     except Exception as e:
@@ -142,4 +134,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)

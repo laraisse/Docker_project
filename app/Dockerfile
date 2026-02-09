@@ -1,30 +1,30 @@
-# Dockerfile pour l'API de prédiction
 FROM python:3.12-slim
 
-# Installation des dépendances système
+WORKDIR /app
+
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
+# Mettre à jour pip et installer setuptools
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
-# Définir le répertoire de travail
-WORKDIR /app
 
-# Copier le fichier requirements depuis la racine
+# Copier requirements.txt
 COPY requirements.txt .
 
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier le code de l'API
-COPY app/app.py .
+# Copier tout le code (y compris templates/)
+COPY . .
 
-# Exposer le port Flask
+# Exposer le port
 EXPOSE 5000
 
 # Volume pour le modèle
 VOLUME ["/models"]
 
-# Commande pour lancer l'API
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# Commande de démarrage
+CMD ["python", "app/app.py"]

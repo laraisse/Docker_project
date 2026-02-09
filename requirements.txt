@@ -1,12 +1,13 @@
-# Bibliothèques scientifiques et image (installer AVANT PyTorch)
-numpy==1.24.3
+# Dépendances de base
+numpy==1.26.4
 Pillow==12.1.0
 
-# PyTorch CPU version compatible avec Python 3.12
+# PyTorch CPU version
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.2.2+cpu
 torchvision==0.17.2+cpu
 
 # Web
 flask==3.1.0
+flask-cors
 gunicorn==21.2.0
