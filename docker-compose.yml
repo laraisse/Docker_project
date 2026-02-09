@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Service d'entraînement
+  train:
+    build:
+      context: .
+      dockerfile: train/Dockerfile
+    container_name: cnn_training
+    volumes:
+      - ./data:/data
+      - ./models:/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ml_network
+
+  # Service API de prédiction
+  api:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: cnn_api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ml_network
+    restart: unless-stopped
+
+networks:
+  ml_network:
+    driver: bridge
