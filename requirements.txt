@@ -1,12 +1,12 @@
-# PyTorch CPU version compatible avec Python 3.12
-torch==2.2.2+cpu
-torchvision==0.17.2+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
-
-# Bibliothèques scientifiques et image
-numpy>=1.26.0  # NumPy >=1.26 compatible avec PyTorch 2.2
+# Bibliothèques scientifiques et image (installer AVANT PyTorch)
+numpy==1.24.3
 Pillow==12.1.0
 
+# PyTorch CPU version compatible avec Python 3.12
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+
 # Web
-flask==3.1.2
-gunicorn
+flask==3.1.0
+gunicorn==21.2.0
