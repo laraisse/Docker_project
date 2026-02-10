@@ -411,11 +411,11 @@
                 return `
                     <div class="prediction-item">
                         <span><strong>${predIcon} ${pred.class}</strong></span>
-                        <span>${(pred.probability * 100).toFixed(2)}%</span>
+                        <span>${(pred.confidence  * 100).toFixed(2)}%</span>
                     </div>
                     <div class="prediction-bar">
-                        <div class="prediction-fill" style="width: ${pred.probability * 100}%">
-                            ${(pred.probability * 100).toFixed(1)}%
+                        <div class="prediction-fill" style="width: ${pred.confidence  * 100}%">
+                            ${(pred.confidence  * 100).toFixed(1)}%
                         </div>
                     </div>
                 `;

@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from flask_cors import CORS

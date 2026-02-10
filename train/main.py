@@ -125,11 +125,11 @@ class CIFAR10Classifier:
 
         # Load datasets
         train_dataset = torchvision.datasets.CIFAR10(
-            root='train/data', train=True, download=True, transform=train_transform
+            root='/train/data', train=True, download=True, transform=train_transform
         )
 
         test_dataset = torchvision.datasets.CIFAR10(
-            root='train/data', train=False, download=True, transform=test_transform
+            root='/train/data', train=False, download=True, transform=test_transform
         )
 
         # Split training into train and validation
@@ -161,7 +161,6 @@ class CIFAR10Classifier:
     def build_model(self):
         print("Building CNN model...")
         self.model = CNNModel(num_classes=self.num_classes).to(self.device)
-        self.model = torch.compile(self.model)
         # Print model summary
         total_params = sum(p.numel() for p in self.model.parameters())
         trainable_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
@@ -234,9 +233,10 @@ class CIFAR10Classifier:
 
         return epoch_loss, epoch_acc
 
-    def train(self, epochs=100, learning_rate=0.001, patience=10):
+    def train(self, epochs=70, learning_rate=0.001, patience=7):
         print("Starting training...")
 
+        os.makedirs('/train/models', exist_ok=True)
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(

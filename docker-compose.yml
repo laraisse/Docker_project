@@ -24,9 +24,9 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./models:/app/models           # Pour charger le modèle
+      - ./models:/models           # Pour charger le modèle
       - ./app/templates:/app/templates # Pour l'interface (live reload)
-      - ./data:/app/data               # Si besoin des données
+      - ./data:/data               # Si besoin des données
     environment:
       - PYTHONUNBUFFERED=1
       - FLASK_ENV=development
