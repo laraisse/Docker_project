@@ -1,6 +1,7 @@
 # Dépendances de base
 numpy==1.26.4
 Pillow==12.1.0
+tqdm>=4.65.0
 
 # PyTorch CPU version
 --extra-index-url https://download.pytorch.org/whl/cpu
