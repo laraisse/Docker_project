@@ -90,7 +90,7 @@ class CNNModel(nn.Module):
 # Chargement du modèle
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = CNNModel(num_classes=10).to(DEVICE)
-MODEL_PATH = "/models/best_model.pth"
+MODEL_PATH = "/app/models/best_model.pth"
 
 try:
     checkpoint = torch.load(MODEL_PATH, map_location=DEVICE)
@@ -104,8 +104,7 @@ except Exception as e:
 transform = transforms.Compose([
     transforms.Resize((32, 32)),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465),
-                         (0.2023, 0.1994, 0.2010))
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 

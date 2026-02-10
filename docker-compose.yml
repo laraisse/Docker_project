@@ -8,8 +8,8 @@ services:
       dockerfile: train/Dockerfile
     container_name: cnn_training
     volumes:
-      - ./data:/train/data      # Changed from /app/data
-      - ./models:/train/models  # Changed from /app/models
+      - ./data:/app/data      # Changed from /app/data
+      - ./models:/app/models  # Changed from /app/models
     environment:
       - PYTHONUNBUFFERED=1
     networks:
@@ -24,9 +24,9 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./models:/models           # Pour charger le modèle
+      - ./models:/app/models:ro           # Pour charger le modèle
       - ./app/templates:/app/templates # Pour l'interface (live reload)
-      - ./data:/data               # Si besoin des données
+      - ./data:/app/data:ro               # Si besoin des données
     environment:
       - PYTHONUNBUFFERED=1
       - FLASK_ENV=development
@@ -34,7 +34,8 @@ services:
       - ml_network
     restart: unless-stopped
     depends_on:
-      - train
+      train:
+        condition: service_completed_successfully
 
 networks:
   ml_network:
