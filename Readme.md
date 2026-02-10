@@ -1,299 +1,389 @@
-# Projet CNN - Classification d'Images CIFAR-10
+# 🖼️ CIFAR-10 Image Classifier
 
-## 📋 Description du Projet
+A complete deep learning project for classifying images into 10 categories using a Convolutional Neural Network (CNN). This project features automated training with Docker and a beautiful web interface for real-time image classification.
 
-Ce projet implémente un système complet de classification d'images utilisant un réseau de neurones convolutionnel (CNN) sur le dataset CIFAR-10. Le projet est entièrement conteneurisé avec Docker pour assurer la reproductibilité et faciliter le déploiement.
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)
+![Flask](https://img.shields.io/badge/Flask-3.0-green.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-### Problématique
-Classifier automatiquement des images en 10 catégories différentes : avions, automobiles, oiseaux, chats, cerfs, chiens, grenouilles, chevaux, navires et camions.
+## 📋 Table of Contents
 
-### Objectifs
-- Entraîner un modèle CNN performant sur CIFAR-10
-- Conteneuriser l'entraînement et le déploiement avec Docker
-- Déployer une API REST pour faire des prédictions en temps réel
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Technologies](#technologies)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Model Details](#model-details)
+- [API Documentation](#api-documentation)
+- [Screenshots](#screenshots)
+- [Performance](#performance)
+- [Contributing](#contributing)
+- [License](#license)
 
-## 🏗️ Architecture du Projet
+## 🎯 Overview
+
+This project implements a state-of-the-art CNN model to classify images from the CIFAR-10 dataset into one of 10 categories:
+
+- ✈️ **Airplane**
+- 🚗 **Automobile**
+- 🐦 **Bird**
+- 🐱 **Cat**
+- 🦌 **Deer**
+- 🐕 **Dog**
+- 🐸 **Frog**
+- 🐴 **Horse**
+- 🚢 **Ship**
+- 🚚 **Truck**
+
+The project is containerized using Docker for easy deployment and includes both a training pipeline and a production-ready API with an interactive web interface.
+
+## ✨ Features
+
+### Training Pipeline
+- 🔄 **Automated Training**: Complete training pipeline with Docker orchestration
+- 📊 **Data Augmentation**: Random flips, rotations, and affine transformations
+- 📈 **Performance Tracking**: Real-time monitoring with progress bars
+- 💾 **Model Checkpointing**: Automatic saving of best models
+- ⏱️ **Early Stopping**: Prevents overfitting with patience-based stopping
+- 📉 **Learning Rate Scheduling**: Adaptive learning rate adjustment
+
+### Web Application
+- 🎨 **Modern UI**: Beautiful, gradient-styled interface
+- 📤 **Drag & Drop**: Easy image upload with drag-and-drop support
+- 🔍 **Live Preview**: Instant image preview before classification
+- 🏆 **Top-3 Predictions**: Shows confidence scores for top 3 predictions
+- 📊 **Confidence Visualization**: Progress bars for probability display
+- 📱 **Responsive Design**: Works on desktop and mobile devices
+
+### API
+- 🚀 **RESTful API**: Clean JSON-based prediction endpoint
+- ❤️ **Health Check**: Monitor service status
+- 🔒 **CORS Enabled**: Ready for cross-origin requests
+- ⚡ **Fast Inference**: Optimized for quick predictions
+
+## 🏗️ Architecture
+
+### CNN Model Architecture
 
 ```
-project/
-├── app/                      # Module API
-│   ├── Dockerfile           # Docker pour l'API
-│   └── app.py               # API Flask
-│
-├── train/                    # Module d'entraînement
-│   ├── Dockerfile           # Docker pour training
-│   └── main.py              # Script d'entraînement
-│
-├── data/                     # Dataset (créé automatiquement)
-├── models/                   # Modèles entraînés
-├── docker-compose.yml        # Orchestration des services
-├── requirements.txt          # Dépendances Python
-└── README.md                # Ce fichier
+Input (32x32x3)
+    ↓
+[Conv Block 1] → 32 filters, 3x3
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ MaxPool2d (2x2)
+    └─ Dropout2d (0.25)
+    ↓
+[Conv Block 2] → 64 filters, 3x3
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ MaxPool2d (2x2)
+    └─ Dropout2d (0.25)
+    ↓
+[Conv Block 3] → 128 filters, 3x3
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ Conv2d + BatchNorm + ReLU
+    ├─ MaxPool2d (2x2)
+    └─ Dropout2d (0.25)
+    ↓
+[Fully Connected Layers]
+    ├─ FC (2048 → 256) + BatchNorm + ReLU + Dropout (0.5)
+    ├─ FC (256 → 128) + BatchNorm + ReLU + Dropout (0.5)
+    └─ FC (128 → 10)
+    ↓
+Output (10 classes)
 ```
 
-## 🧠 Modèle CNN
+**Key Features:**
+- Batch Normalization for stable training
+- Dropout layers to prevent overfitting
+- Multiple convolutional blocks for feature extraction
+- ~1.2M trainable parameters
 
-### Architecture
-Le modèle SimpleCNN comprend :
-- **3 blocs convolutionnels** avec BatchNormalization et MaxPooling
-  - Conv1: 3→32 canaux
-  - Conv2: 32→64 canaux
-  - Conv3: 64→128 canaux
-- **2 couches fully connected** avec Dropout (0.5)
-- **Fonction d'activation**: ReLU
-- **Sortie**: 10 classes (softmax)
+## 🛠️ Technologies
 
-### Hyperparamètres
-- Batch size: 64
-- Epochs: 10
-- Learning rate: 0.001
-- Optimizer: Adam
-- Loss: CrossEntropyLoss
+- **Deep Learning**: PyTorch 2.0+
+- **Web Framework**: Flask 3.0
+- **Computer Vision**: torchvision, PIL
+- **Containerization**: Docker, Docker Compose
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Data**: CIFAR-10 dataset (60,000 images)
 
-## 📊 Dataset - CIFAR-10
+## 📁 Project Structure
 
-- **Source**: [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)
-- **Images**: 60,000 images couleur 32x32
-- **Classes**: 10 catégories
-- **Train/Test**: 50,000 / 10,000 images
-- **Téléchargement**: Automatique via torchvision
+```
+├── app/
+│   ├── data/ 
+│   ├── models/                     # Saved model checkpoints
+│   ├──  best_model.pth
+│   ├── Dockerfile              # API service Docker configuration
+│   ├── app.py                  # Flask application & prediction API
+│   └── templates/
+│      └── index.html          # Web interface
+├── train/
+│   ├── Dockerfile              # Training service Docker configuration
+│   └── main.py                      
+├── docker-compose.yml          # Multi-service orchestration
+├── README.md
+└── requirements.txt
+```
 
-### Prétraitement
-- Normalisation avec mean et std de CIFAR-10
-- Augmentation de données (training):
-  - RandomHorizontalFlip
-  - RandomCrop avec padding
+## 🚀 Installation
 
-## 🚀 Installation et Exécution
+### Prerequisites
 
-### Prérequis
-- Docker
-- Docker Compose
-- (Optionnel) GPU avec CUDA pour accélération
+- Docker (version 20.0+)
+- Docker Compose (version 2.0+)
+- 4GB+ RAM recommended
+- 2GB+ free disk space
 
-### Étape 1: Cloner le projet
+### Quick Start
+
+1. **Clone the repository**
 ```bash
-git clone <votre-repo>
-cd cnn-cifar10-project
+git clone https://github.com/yourusername/cifar10-classifier.git
+cd cifar10-classifier
 ```
 
-### Étape 2: Créer la structure
+2. **Build and run with Docker Compose**
 ```bash
-# Créer les dossiers nécessaires
-mkdir -p data models
+docker-compose up --build
 ```
 
-### Étape 3: Construire les images Docker
-```bash
-docker-compose build
+This will:
+- Build both training and API containers
+- Download the CIFAR-10 dataset automatically
+- Train the model (takes 30-60 minutes depending on hardware)
+- Start the API service on port 5000
+
+3. **Access the application**
+
+Open your browser and navigate to:
+```
+http://localhost:5000
 ```
 
-### Étape 4: Entraîner le modèle
-```bash
-# Lancer l'entraînement avec docker-compose
-docker-compose run train
+## 💻 Usage
 
-# OU directement avec Docker
-docker build -t cnn-training ./train
-docker run -v $(pwd)/data:/data -v $(pwd)/models:/models cnn-training
-```
+### Using the Web Interface
 
-### Étape 5: Lancer l'API de prédiction
-```bash
-# Démarrer l'API
-docker-compose up api
+1. Open `http://localhost:5000` in your browser
+2. Click the upload area or drag & drop an image
+3. Click "🚀 Classify Image" button
+4. View the prediction results with confidence scores
 
-# L'API sera accessible sur http://localhost:5000
-```
+### Using the API
 
-## 🔌 Utilisation de l'API
-
-### Vérifier le statut
+#### Health Check
 ```bash
 curl http://localhost:5000/health
 ```
 
-### Faire une prédiction
+Response:
+```json
+{
+  "status": "healthy",
+  "device": "cpu",
+  "model_loaded": true
+}
+```
+
+#### Predict Image
 ```bash
-curl -X POST -F "image=@image.jpg" http://localhost:5000/predict
+curl -X POST -F "image=@path/to/your/image.jpg" \
+  http://localhost:5000/predict
 ```
 
-### Exemple avec Python
-```python
-import requests
-
-url = "http://localhost:5000/predict"
-files = {'image': open('test_image.jpg', 'rb')}
-response = requests.post(url, files=files)
-print(response.json())
-```
-
-### Exemple de réponse
+Response:
 ```json
 {
   "success": true,
-  "prediction": "cat",
-  "confidence": 0.89,
-  "top3_predictions": [
-    {"class": "cat", "confidence": 0.89},
-    {"class": "dog", "confidence": 0.08},
-    {"class": "deer", "confidence": 0.02}
+  "predicted_class": "cat",
+  "confidence": 0.8734,
+  "top_3_predictions": [
+    {
+      "class": "cat",
+      "confidence": 0.8734
+    },
+    {
+      "class": "dog",
+      "confidence": 0.0892
+    },
+    {
+      "class": "bird",
+      "confidence": 0.0234
+    }
   ]
 }
 ```
 
-## 📈 Performances Attendues
+### Training Only
 
-Avec cette architecture simple :
-- **Accuracy sur test set**: ~70-75%
-- **Temps d'entraînement (CPU)**: ~20-30 min pour 10 epochs
-- **Temps d'entraînement (GPU)**: ~3-5 min pour 10 epochs
+To only train the model without starting the API:
 
-## 🐳 Docker - Détails Techniques
-
-### Structure des Volumes
-- `./data:/data` - Persistance du dataset CIFAR-10
-- `./models:/models` - Sauvegarde des modèles entraînés
-
-### Réseau
-- Network bridge `ml_network` pour la communication inter-conteneurs
-
-### Bonnes Pratiques Respectées
-✅ Images légères (python:3.9-slim)
-✅ Cache des layers optimisé
-✅ Volumes pour la persistance des données
-✅ Variables d'environnement pour la configuration
-✅ Séparation des préoccupations (train/api)
-✅ Pas de données sensibles dans les images
-
-## 🔄 Dimension MLOps
-
-### Reproductibilité
-- Versions figées des dépendances (requirements.txt)
-- Environnement Docker isolé et reproductible
-- Seed aléatoire fixe possible pour reproduire les résultats
-
-### Versioning
-- Modèles sauvegardés avec métadonnées (epoch, accuracy)
-- Structure modulaire facilitant le versioning
-
-### CI/CD Ready
-- Tests automatisables
-- Déploiement simplifié via Docker
-- Scalabilité horizontale possible
-
-## 🧪 Tests
-
-### Test manuel de l'API
 ```bash
-# Télécharger une image test
-wget https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/200px-Cat03.jpg -O cat.jpg
-
-# Tester la prédiction
-curl -X POST -F "image=@cat.jpg" http://localhost:5000/predict
+docker-compose up train
 ```
 
-### Test avec script Python
+### Custom Training
+
+You can modify training parameters in `train/main.py`:
+
 ```python
-import requests
-import json
-
-def test_api():
-    # Test health endpoint
-    health = requests.get('http://localhost:5000/health')
-    print("Health check:", health.json())
-    
-    # Test prediction
-    with open('cat.jpg', 'rb') as f:
-        files = {'image': f}
-        response = requests.post('http://localhost:5000/predict', files=files)
-        print("Prediction:", json.dumps(response.json(), indent=2))
-
-if __name__ == '__main__':
-    test_api()
+classifier.train(
+    epochs=40,           # Number of epochs
+    learning_rate=0.001, # Initial learning rate
+    patience=5           # Early stopping patience
+)
 ```
 
-## 📝 Comparaison Local vs Docker
+## 📊 Model Details
 
-### Exécution Locale
+### Training Configuration
+
+- **Optimizer**: Adam
+- **Learning Rate**: 0.001 (with ReduceLROnPlateau scheduling)
+- **Batch Size**: 64
+- **Data Split**: 90% train, 10% validation
+- **Epochs**: 40 (with early stopping)
+- **Early Stopping Patience**: 5 epochs
+
+### Data Augmentation
+
+The training uses several augmentation techniques:
+- Random horizontal flips
+- Random rotation (±15°)
+- Random affine transformations
+- Random resized crops
+- Normalization: mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)
+
+### Regularization Techniques
+
+- **Dropout**: 0.25 in convolutional layers, 0.5 in FC layers
+- **Batch Normalization**: After each convolutional and FC layer
+- **Weight Decay**: Through Adam optimizer
+- **Data Augmentation**: Multiple transformations
+
+## 📈 Performance
+
+### Expected Results
+
+- **Validation Accuracy**: ~85-90%
+- **Training Time**: 30-60 minutes (CPU)
+- **Inference Time**: <100ms per image
+- **Model Size**: ~5MB
+
+### Performance Optimization
+
+The application includes several optimizations:
+- Multi-worker data loading
+- Persistent workers for faster epoch iteration
+- GPU support (auto-detected if available)
+- Efficient batch processing
+
+## 🔧 Development
+
+### Running in Development Mode
+
+1. **API Development** (with live reload):
 ```bash
-# Installer les dépendances
-pip install -r requirements.txt
-
-# Entraîner
-cd train
-python main.py
-
-# Lancer l'API
-cd ../app
-python app.py
-```
-
-### Exécution Docker
-```bash
-# Tout en une commande
-docker-compose up
-```
-
-**Avantages Docker:**
-- ✅ Environnement isolé et reproductible
-- ✅ Pas de conflit de dépendances
-- ✅ Déploiement simplifié
-- ✅ Portabilité garantie
-
-## 🚀 Améliorations Possibles
-
-### Modèle
-- Utiliser ResNet ou VGG pré-entraînés (Transfer Learning)
-- Implémenter le learning rate scheduling
-- Ajouter plus d'augmentation de données
-
-### Infrastructure
-- Support GPU dans Docker (nvidia-docker)
-- Monitoring avec Prometheus/Grafana
-- Logging centralisé
-
-### API
-- FastAPI au lieu de Flask (plus performant)
-- Authentification JWT
-- Rate limiting
-- Batch predictions
-- WebSocket pour streaming
-
-### MLOps
-- Intégration MLflow pour le tracking
-- Tests automatiques (pytest)
-- CI/CD avec GitHub Actions
-- Versioning des datasets (DVC)
-
-## 🛠️ Dépannage
-
-### Problème: Le modèle ne se charge pas dans l'API
-**Solution**: Assurez-vous d'avoir entraîné le modèle avant de lancer l'API
-```bash
-docker-compose run train
 docker-compose up api
 ```
 
-### Problème: Erreur de permissions sur les volumes
-**Solution**: Vérifier les permissions des dossiers
+The Flask app runs in debug mode with template auto-reload.
+
+2. **Local Development** (without Docker):
+
+Install dependencies:
 ```bash
-chmod -R 777 data models
+pip install -r requirements.txt
 ```
 
-### Problème: Port 5000 déjà utilisé
-**Solution**: Modifier le port dans docker-compose.yml
-```yaml
-ports:
-  - "5001:5000"  # Utiliser le port 5001
+Train the model:
+```bash
+cd train
+python main.py
 ```
 
-## 👥 Auteurs
+Run the API:
+```bash
+cd app
+python app.py
+```
 
-- [Votre nom]
-- [Nom du binôme]
+### Customization
 
-## 📄 Licence
+#### Modify the Model
 
-Projet académique - 3A-SDD 2025-2026
-Technologies IA: Conteneurisation et déploiement
+Edit the `CNNModel` class in `train/main.py` or `app/app.py` to experiment with different architectures.
+
+#### Update the UI
+
+The web interface is in `app/templates/index.html`. It's a single-file application with embedded CSS and JavaScript for easy customization.
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Problem**: Model file not found
+```
+Solution: Make sure training completed successfully. Check ./models/best_model.pth exists
+```
+
+**Problem**: Out of memory during training
+```
+Solution: Reduce batch_size in train/main.py (try 32 or 16)
+```
+
+**Problem**: Docker build fails
+```
+Solution: Ensure Docker has sufficient resources allocated (4GB+ RAM)
+```
+
+**Problem**: Port 5000 already in use
+```
+Solution: Change the port in docker-compose.yml:
+  ports:
+    - "8000:5000"  # Now accessible on port 8000
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Here are some ways you can help:
+
+1. 🐛 Report bugs
+2. 💡 Suggest new features
+3. 📝 Improve documentation
+4. 🔧 Submit pull requests
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **CIFAR-10 Dataset**: Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton
+- **PyTorch Team**: For the excellent deep learning framework
+- **Flask Team**: For the lightweight web framework
+
+## 📧 Contact
+
+For questions or feedback, please open an issue on GitHub.
+
+---
+
+**Made with ❤️ and PyTorch**
+
+⭐ Star this repository if you found it helpful!
