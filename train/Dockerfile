@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Définir le répertoire de travail
-WORKDIR /app
+WORKDIR /train
 
 # Copier le fichier requirements depuis la racine
 COPY requirements.txt .
@@ -21,14 +21,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le code source
 COPY train/main.py .
 
-RUN mkdir -p /data /models
+RUN mkdir -p /train/data /train/models
 
 ENV PYTHONUNBUFFERED=1
 ENV DATA_DIR=/data
 ENV MODEL_DIR=/models
 
 # Exposer les volumes pour les données et modèles
-VOLUME ["/data", "/models"]
+VOLUME ["/train/data", "/train/models"]
 
 # Commande par défaut
 CMD ["python", "main.py"]

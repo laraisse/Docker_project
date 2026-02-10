@@ -125,11 +125,11 @@ class CIFAR10Classifier:
 
         # Load datasets
         train_dataset = torchvision.datasets.CIFAR10(
-            root='../data', train=True, download=True, transform=train_transform
+            root='train/data', train=True, download=True, transform=train_transform
         )
 
         test_dataset = torchvision.datasets.CIFAR10(
-            root='../data', train=False, download=True, transform=test_transform
+            root='train/data', train=False, download=True, transform=test_transform
         )
 
         # Split training into train and validation
@@ -274,7 +274,11 @@ class CIFAR10Classifier:
                 best_val_acc = val_acc
                 epochs_no_improve = 0
                 # Save best model
-                torch.save(self.model.state_dict(), '../models/best_model.pth')
+                torch.save({
+                    'model_state_dict': self.model.state_dict(),
+                    'accuracy': val_acc * 100,  # Add this - the app expects it!
+                    'history': self.history
+                }, '/train/models/best_model.pth')
                 print(f"✓ New best model saved! (Val Acc: {val_acc * 100:.2f}%)")
             else:
                 epochs_no_improve += 1
@@ -283,21 +287,25 @@ class CIFAR10Classifier:
             if epochs_no_improve >= patience:
                 print(f"\nEarly stopping triggered after {epoch + 1} epochs")
                 # Load best model
-                self.model.load_state_dict(torch.load('../models/best_model.pth'))
+                checkpoint = torch.load('/train/models/best_model.pth')
+                self.model.load_state_dict(checkpoint['model_state_dict'])
                 break
 
         print("\nTraining completed!")
         return self
 
-    def save_model(self, filepath='best_model.pth'):
+    def save_model(self, filepath='/train/models/best_model.pth'):
+        best_acc = max(self.history['val_acc']) * 100 if self.history['val_acc'] else 0.0
+
         torch.save({
             'model_state_dict': self.model.state_dict(),
+            'accuracy': best_acc,  # App needs this!
             'history': self.history
         }, filepath)
         print(f"Model saved to {filepath}")
         return self
 
-    def load_model(self, filepath='best_model.pth'):
+    def load_model(self, filepath='/train/models/best_model.pth'):
         checkpoint = torch.load(filepath, map_location=self.device)
 
         if self.model is None:
@@ -325,4 +333,4 @@ if __name__ == "__main__":
     classifier.train(epochs=100, learning_rate=0.001, patience=10)
 
     # Save model
-    classifier.save_model('best_model.pth')
+    classifier.save_model()

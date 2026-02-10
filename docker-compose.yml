@@ -8,8 +8,8 @@ services:
       dockerfile: train/Dockerfile
     container_name: cnn_training
     volumes:
-      - ./data:/app/data
-      - ./models:/app/models
+      - ./data:/train/data      # Changed from /app/data
+      - ./models:/train/models  # Changed from /app/models
     environment:
       - PYTHONUNBUFFERED=1
     networks:
