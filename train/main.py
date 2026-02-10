@@ -330,7 +330,7 @@ if __name__ == "__main__":
     classifier.build_model()
 
     # Train the model
-    classifier.train(epochs=100, learning_rate=0.001, patience=10)
+    classifier.train(epochs=40, learning_rate=0.001, patience=5)
 
     # Save model
     classifier.save_model()
